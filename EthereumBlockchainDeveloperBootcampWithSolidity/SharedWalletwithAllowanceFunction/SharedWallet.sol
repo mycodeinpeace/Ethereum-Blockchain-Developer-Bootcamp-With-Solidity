@@ -1,18 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.6.0;
+pragma solidity ^0.8.0;
 
-contract SharedWallet {
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/contracts/access/Ownable.sol";
 
-    address public owner;
-
-    constructor() internal {
-        owner = msg.sender;
-    }
-
-    modifier onlyOwner() {
-        require(msg.sender == owner, "You are not allowed");
-        _;
-    }
+contract SharedWallet is Ownable {
 
     function withdrawMoney(address payable _to, uint _amount) public onlyOwner {
         _to.transfer(_amount);
