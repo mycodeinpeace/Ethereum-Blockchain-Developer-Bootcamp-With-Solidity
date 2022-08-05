@@ -30,6 +30,7 @@ class App extends Component {
 
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
+      this.listenToPaymentEvent();
       this.setState({ loaded:true });
     } catch (error) {
       // Catch any errors for any of the above operations.
@@ -39,6 +40,18 @@ class App extends Component {
       console.error(error);
     }
   };
+
+  listenToPaymentEvent = () => {
+    let self = this;
+    this.itemManager.events.SupplyChainStep().on("data", async function(evt) {
+    if(evt.returnValues._step == 1) {
+      let item = await self.itemManager.methods.items(evt.returnValues._itemIndex).call();
+      console.log(item);
+      alert("Item " + item._identifier + " was paid, deliver it now!");
+    };
+    console.log(evt);
+    });
+  }
 
   handleInputChange = (event) => {
       const target = event.target;
